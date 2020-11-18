@@ -1,14 +1,197 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt">
 <head>
-  <meta charset="utf-8">
-  <title>App</title>
-  <base href="/">
+  <meta charset="UTF-8">
+  <title>MultSearch</title>
+  
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script src="//code.angularjs.org/snapshot/angular.min.js"></script>
+  
+  
+  <link href="//localhost:4200/css/indexStyle.css" rel="stylesheet" type="text/css">
+  
 </head>
-<body>
-  <app-root></app-root>
+<body ng-app="App">
+
+<div ng-controller="APPController" class="container">
+    <img class="imagem"  [src]="file:///c%3A/Users/vitor/source/repos/WebApplication3/layout/logo_multisearch.png"/>
+    <input ng-model="parametro" placeholder="
+    Pesquisar">
+ 
+ <button ng-click="buscar(parametro)"><img class="iconeBusca" src="https://2.bp.blogspot.com/-A6xDuUIrOlg/UXdgH7DoK5I/AAAAAAAAAyI/eRD2wk9gUH8/s1600/lupa3.png"></button>
+ <h2>Foram encontrados {{sales.length+purchase.length+material.length+equipments.length+workforce.length}} itens</h2>
+
+ <table>
+  <thead>
+      <tr>
+          <td  class="tdspace">Pedidos de Venda</td>
+          <td >({{sales.length}} itens encontrados)</td>
+      </tr>
+  </thead>
+  <tbody>
+      <tr ng-repeat="item in sales">
+          <td>#{{item.salesOrderID}}</td>
+          <td>{{item.materialName}}</td>
+          <td>{{item.quantity}} pç</td>
+      </tr>
+  </tbody>
+</table>
+ 
+<table>
+  <thead>
+      <tr>
+          <td class="tdspace">Pedidos de compra</td>
+        
+          <td>({{purchase.length}} itens encontrados)</td>
+      </tr>
+  </thead>
+  <tbody>
+      <tr ng-repeat="item in purchase">
+          <td>#{{item.purchaseOrderID}}</td>
+          <td>{{item.materialName}}</td>
+          <td>{{item.quantity}} pç</td>
+      </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+      <tr colspan="5">
+          <td class="tdspace">Produtos</td>
+       
+          <td colspan="2">({{material.length}} itens encontrados)</td>
+      </tr>
+    
+  </thead>
+  <tbody>
+      <tr ng-repeat="item in material">
+          <td>#{{item.materialID}}</td>
+          <td>{{item.materialName}}</td>
+      </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+      <tr>
+          <td class="tdspace">Equipamentos</td>
+         
+          <td>({{equipments.length}} itens encontrados)</td>
+      </tr>
+  </thead>
+  <tbody>
+      <tr ng-repeat="item in equipments">
+          <td>#{{item.equipmentID}}</td>
+          <td>{{item.equipmentName}}</td>
+      </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+      <tr>
+          <td class="tdspace">Força de Trabalho</td>
+       
+          <td>({{ workforce.length }}  itens encontrados)</td>
+     </tr>
+  </thead>
+  <tbody>
+      <tr ng-repeat="item in workforce">
+        <td></td>  
+        <td>{{item.name}}</td>
+        <td>{{item.shift}}</td>
+      </tr>
+  </tbody>
+</table>
+
 </body>
 </html>
+<script>
+    (function(angular) {
+    'use strict';
+  var myApp = angular.module('App', []);
+  
+  myApp.controller('APPController', ['$scope', '$http', function($scope, $http) {
+      
+  
+      $scope.buscar = function(spice) {
+          
+        
+        $http({
+            method: 'GET',
+            url: 'https://localhost:44383/api/workforce?parametro=' + $scope.parametro
+
+        })
+        .then(function (response) {
+            console.log('sucesso a executar o post');
+           
+              
+              $scope.workforce = response.data;
+                    
+                        
+                                                 
+           
+            console.log($scope.workforce);
+        }, function () {
+               console.log('Erro ao executar o post');
+           });
+
+
+        $http({
+            method: 'GET',
+            url: 'https://localhost:44383/api/materials?parametro=' + $scope.parametro
+
+        })
+        .then(function (response) {
+            console.log('sucesso a executar o post');
+            $scope.material = response.data;
+            console.log( $scope.material);
+        }, function () {
+               console.log('Erro ao executar o post');
+           });
+
+        $http({
+            method: 'GET',
+            url: 'https://localhost:44383/api/salesorder?parametro=' + $scope.parametro
+
+        })
+        .then(function (response) {
+            console.log('sucesso a executar o post');
+            $scope.sales = response.data;
+            console.log( $scope.sales);
+        }, function () {
+               console.log('Erro ao executar o post');
+           });
+           $http({
+            method: 'GET',
+            url: 'https://localhost:44383/api/purchaseorders?parametro=' + $scope.parametro
+
+        })
+        .then(function (response) {
+            console.log('sucesso a executar o post');
+            $scope.purchase = response.data;
+            console.log( $scope.purchase);
+        }, function () {
+               console.log('Erro ao executar o post');
+           });
+           $http({
+            method: 'GET',
+            url: 'https://localhost:44383/api/equipments?parametro=' + $scope.parametro
+
+        })
+        .then(function (response) {
+            console.log('sucesso a executar o post');
+            $scope.equipments = response.data;
+            console.log( $scope.purchase);
+        }, function () {
+               console.log('Erro ao executar o post');
+           });
+      };
+  }]);
+
+
+
+  })(window.angular);
+
+
+</script>
